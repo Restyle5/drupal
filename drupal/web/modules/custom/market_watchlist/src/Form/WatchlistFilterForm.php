@@ -55,7 +55,7 @@ class WatchlistFilterForm extends FormBase {
     $current_value = $request ? (string) $request->query->get('symbol', '') : '';
 
     // GET form: no token needed, values travel as a query string.
-    $form['#method'] = 'get';******
+    $form['#method'] = 'get';
     $form['#token'] = FALSE;
 
     $form['symbol'] = [

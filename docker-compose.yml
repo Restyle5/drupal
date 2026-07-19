@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: drupal_test
+    container_name: drupal
     ports:
       - "8080:80"
     volumes:
