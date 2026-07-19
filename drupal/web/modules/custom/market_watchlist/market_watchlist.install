@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Install, update and schema functions for the Market Watchlist module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function market_watchlist_schema() {    
+  $schema['market_watchlist_prices'] = [
+    'description' => 'Stores the latest known price data for a stock symbol.',
+    'fields' => [
+      'id' => [
+        'description' => 'Primary key.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'symbol' => [
+        'description' => 'Stock ticker symbol, e.g. AAPL.',
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+      ],
+      'price' => [
+        'description' => 'Latest price.',
+        'type' => 'numeric',
+        'precision' => 15,
+        'scale' => 4,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'change_amount' => [
+        'description' => 'Change in price since previous close.',
+        'type' => 'numeric',
+        'precision' => 15,
+        'scale' => 4,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'volume' => [
+        'description' => 'Trading volume.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'updated_at' => [
+        'description' => 'Unix timestamp of the last update.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'unique keys' => [
+      'symbol' => ['symbol'],
+    ],
+    'indexes' => [
+      'updated_at' => ['updated_at'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Seed initial stock market watchlist indicators.
+ */
+function market_watchlist_install() {
+  $database = \Drupal::database();
+  
+  // Define our initial data seed payload matching the original schema
+  $seed_records = [
+    [
+      'symbol' => 'AAPL',
+      'price' => 175.5000,
+      'change_amount' => 1.2500,
+      'volume' => 52000000,
+      'updated_at' => \Drupal::time()->getRequestTime(),
+    ],
+    [
+      'symbol' => 'TSLA',
+      'price' => 220.1000,
+      'change_amount' => -3.4500,
+      'volume' => 88000000,
+      'updated_at' => \Drupal::time()->getRequestTime(),
+    ],
+    [
+      'symbol' => 'GOOGL',
+      'price' => 142.8000,
+      'change_amount' => 0.6500,
+      'volume' => 24000000,
+      'updated_at' => \Drupal::time()->getRequestTime(),
+    ],
+  ];
+
+  // Initialize a bulk insert query wrapper targeting the active schema fields
+  $query = $database->insert('market_watchlist_prices')
+    ->fields(['symbol', 'price', 'change_amount', 'volume', 'updated_at']);
+
+  // Add each record payload cleanly to the batch structure
+  foreach ($seed_records as $record) {
+    $query->values($record);
+  }
+
+  // Execute the multi-row query atomically at the database level
+  $query->execute();
+}
