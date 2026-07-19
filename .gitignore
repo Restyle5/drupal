@@ -1,0 +1,31 @@
+# Composer-managed dependencies — reinstalled via `composer install`
+/drupal/vendor/
+/drupal/web/core/
+/drupal/web/modules/contrib/
+/drupal/web/themes/contrib/
+/drupal/web/profiles/contrib/
+/drupal/web/libraries/
+
+# Drupal-generated / environment-specific
+/drupal/web/sites/*/settings.local.php
+/drupal/web/sites/*/files/
+/drupal/web/sites/simpletest/
+
+# Never commit real settings.php if it has DB credentials in it
+# (skip this line if your settings.php only has generic docker values
+# and you WANT it in git for the test reviewer to see)
+# /drupal/web/sites/default/settings.php
+
+# Local dev / IDE
+.env
+.idea/
+.vscode/
+*.swp
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docker
+# (compose files should stay committed — only ignore local overrides)
+docker-compose.override.yml

@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  drupal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: drupal_test
+    ports:
+      - "8080:80"
+    volumes:
+      # Empty ./drupal folder on your host — Composer will populate it
+      # (see README step 1). It stays mounted so all code, including
+      # what Composer creates, is visible/editable on your host machine.
+      - ./drupal:/opt/drupal
+    environment:
+      DRUPAL_DB_HOST: db
+      DRUPAL_DB_NAME: drupal
+      DRUPAL_DB_USER: drupal
+      DRUPAL_DB_PASSWORD: drupal
+    depends_on:
+      - db
+    networks:
+      - drupal_net
+
+  db:
+    image: mariadb:10.11
+    container_name: drupal_db
+    environment:
+      MARIADB_DATABASE: drupal
+      MARIADB_USER: drupal
+      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - drupal_net
+
+  adminer:
+    image: adminer
+    container_name: drupal_adminer
+    ports:
+      - "8081:8080"
+    networks:
+      - drupal_net
+
+volumes:
+  db_data:
+
+networks:
+  drupal_net:
