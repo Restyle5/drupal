@@ -1,0 +1,7 @@
+name: Market Watchlist
+type: module
+description: 'Ingests stock price data via a JSON import endpoint and displays it on a filterable watchlist page.'
+package: Custom
+core_version_requirement: ^9 || ^10 || ^11
+dependencies:
+  - drupal:system

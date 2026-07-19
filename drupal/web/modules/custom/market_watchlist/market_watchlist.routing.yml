@@ -1,0 +1,16 @@
+market_watchlist.view:
+  path: '/watchlist'
+  defaults:
+    _controller: '\Drupal\market_watchlist\Controller\WatchlistController::view'
+    _title: 'Stock Watchlist'
+  requirements:
+    _permission: 'view market watchlist'
+  methods: [GET]
+
+market_watchlist.import:
+  path: '/api/watchlist/import'
+  defaults:
+    _controller: '\Drupal\market_watchlist\Controller\WatchlistImportController::import'
+  requirements:
+    _permission: 'import market watchlist prices'
+  methods: [POST]

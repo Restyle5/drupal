@@ -1,0 +1,8 @@
+view market watchlist:
+  title: 'View market watchlist'
+  description: 'Allow viewing the stock watchlist page at /watchlist.'
+
+import market watchlist prices:
+  title: 'Import market watchlist prices'
+  description: 'Allow posting JSON price data to the import endpoint. Grant only to trusted roles/services.'
+  restrict access: true
