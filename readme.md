@@ -1,62 +1,181 @@
-# Fresh Drupal 11 + PHP 8.3 Docker Test Environment
+# Drupal Market Watchlist - Development Notes
 
-## 1. Create an empty folder for the code
+## Introduction
 
-```bash
-mkdir drupal
+This is my first time using Drupal. My previous experience has mainly been with plain PHP, Laravel, and CakePHP.
+
+This document explains my approach, setup instructions, assumptions made during development, trade-offs, possible improvements, and approximate time spent.
+
+---
+
+# 1. Setup Instructions
+
+All setup instructions, from cloning the repository until enabling the module, are documented separately in:
+
+```
+drupal.md
 ```
 
-This just needs to exist and be empty — Composer will fill it in the next step,
-and because it's mounted into the container, everything ends up on your host
-machine too (so you can edit with your normal editor/IDE).
+The document includes:
 
-## 2. Scaffold Drupal 11 via Composer (one-off, before first boot)
+- Cloning the repository
+- Starting Docker environment
+- Installing dependencies
+- Setting up Drupal
+- Enabling the module
+- Required Drush commands
 
-```bash
-docker run --rm -v "$(pwd)/drupal:/app" composer:2 create-project drupal/recommended-project:^11 /app
+---
+
+# 2. Assumptions Made
+
+## AI-Assisted Development
+
+Most of the implementation was generated with AI assistance.
+
+However, every generated file was carefully inspected to ensure:
+
+- The implementation matches the requirements
+- The code flow is understood
+- The generated code behaves as expected
+
+---
+
+## Understanding of Drupal Code Flow
+
+Every generated file was reviewed and understood, including how the code moves through:
+
+- Module metadata setup
+- Migration
+- Routing
+- Controller
+- Form
+- Permission
+
+The goal was not only to generate working code, but also to understand how each Drupal component connects together.
+
+---
+
+# 3. Trade-offs and Improvements With More Time
+
+The current implementation focuses on completing the required functionality.
+
+With additional time, the following improvements could be considered.
+
+---
+
+## 3.1 Dedicated Theme Module
+
+As far as I can tell, creating another module with type:
+
+```
+theme
 ```
 
-This pulls Drupal 11's recommended project skeleton into `./drupal`.
+could improve the overall presentation and rendering of the page.
 
-## 3. Build and start the stack
+This would allow better separation between:
 
-```bash
-docker compose up -d --build
+- Application logic
+- Page rendering
+- User interface improvements
+
+---
+
+## 3.2 Seeder and Unit Tests
+
+Implement:
+
+- Seeder
+- Unit tests
+
+Benefits:
+
+- Easier testing
+- More consistent development data
+- Better confidence when making changes
+
+---
+
+## 3.3 Proper Logging Mechanism
+
+Implement a proper logging mechanism.
+
+This would help with:
+
+- Debugging
+- Tracking errors
+- Monitoring important operations
+
+---
+
+## 3.4 Validator Service
+
+Introduce a dedicated:
+
+```
+ValidatorService
 ```
 
-This starts:
-- **drupal** — PHP 8.3 + Apache, at http://localhost:8080
-- **db** — MariaDB 10.11
-- **adminer** — DB admin UI at http://localhost:8081 (System: MySQL, Server: `db`, user: `drupal`, pass: `drupal`)
+to make the controller more readable and focused on a single responsibility.
 
-## 4. Run the install wizard
+The idea is to separate:
 
-Visit **http://localhost:8080** and step through the Drupal installer.
-When it asks for database details:
+- Validation rules
+- Controller logic
 
-- Database name: `drupal`
-- Username: `drupal`
-- Password: `drupal`
-- Host: `db`
-- (Advanced options → Port: leave default 3306)
+The same approach could also be applied to other areas such as:
 
-## 5. Verify versions match the test requirements
+- Database handling
+- Events
+- Output/resource handling
 
-```bash
-docker compose exec drupal php -v
-docker compose exec drupal composer show drupal/core | grep versions
-```
+This would improve separation of concerns and maintainability.
 
-## 6. Everyday commands
+---
 
-```bash
-docker compose exec drupal bash      # shell into the container
-docker compose logs -f drupal        # tail logs
-docker compose down                  # stop, keep DB data
-docker compose down -v               # stop, wipe DB data (start totally fresh again)
-```
+# 4. Approximate Time Spent
 
-## Notes
-- `./drupal` on your host = `/opt/drupal` in the container, live-synced both ways.
-- If Drush isn't already pulled in by `recommended-project`, add it with:
-  `docker compose exec drupal composer require drush/drush`
+## Part A - Around 2 Hours 30 Minutes
+
+Activities:
+
+- Setup Docker
+- Setup Drupal
+- Understanding how Drupal works
+- Setup Git
+
+---
+
+## Part B - Around 25 Minutes
+
+Activities:
+
+- Solving issues
+- Testing
+
+---
+
+## Part C - Around 35 Minutes
+
+Activities:
+
+- Understanding issues/code
+- Solving common issues:
+  - N+1 query
+  - SQL Injection
+
+- Enhancing overall code quality
+
+---
+
+# Final Notes
+
+The implementation was completed while learning Drupal's structure and workflow.
+
+The main focus was:
+
+- Understanding Drupal module architecture
+- Ensuring the implementation matches the requirements
+- Reviewing generated code carefully
+- Improving overall code quality where possible
